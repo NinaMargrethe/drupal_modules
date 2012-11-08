@@ -1,0 +1,3 @@
+name = gigsmodule
+description = A module for adding new gigs with date, time, venue, age limit and CC that also should show old gigs and post new gigs to front page block in Bluemasters theme.
+core = 6.x
