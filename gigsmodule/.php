@@ -1,4 +1,4 @@
-n<?php
+<?php
 /**
  * Display help and module information
  * @param path which path of the site we're displaying help
