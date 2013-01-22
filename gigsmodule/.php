@@ -1,4 +1,4 @@
-<?php
+n<?php
 /**
  * Display help and module information
  * @param path which path of the site we're displaying help
@@ -37,7 +37,7 @@ function gigsmodeule_block($op = 'list', $delta = 0, $edit = array()){
             while ($gigs = db_fetch_object($upcoming_gigs)) {
                 $block_content .= l('<li>', $gigs, '</li>');
             }
-            $block_content .= '<ul>' . $block_content . '</ul>';
+            $block_content = '<ul>' . $block_content . '</ul>';
 
             break;
 
@@ -47,8 +47,8 @@ function gigsmodeule_block($op = 'list', $delta = 0, $edit = array()){
         case "configure":
             break;
     }
-    if($block_content == ''){
-        $block_content = 'There are no upcoming gigs at the moment. Stay tuned!';
+    if($gigs == ''){
+        $block_content = '<p>We regret to inform that there are no upcoming gigs posted at the moment.</p> <p>Please check our <a href="https://www.facebook.com/VanityBLVD?fref=ts">Facebook page</a> for more info.</p>';
     }
     return $block;
 }
@@ -90,31 +90,31 @@ function gigsmodule_all(){
 
     $query_upcoming = "SELECT (date, time, venue, age_limit, cc) FROM {node} WHERE date >= '%d' ORDER BY CONVERT (datetime, date, 103) ASC";
     $upcoming_gigs =  db_query($query_upcoming, $today);
+    $new_gigs_string = '';
 
     //TODO change from list to table? [later]
     // http://stackoverflow.com/questions/2690668/how-to-create-html-tables-from-mysql/2690692#2690692
-    //http://davidwalsh.name/html-mysql-php
-    $page_content .= '<h3>Upcoming gigs</h3><ul>';
+    // http://davidwalsh.name/html-mysql-php
+
     while (db_fetch_object($query_upcoming)) {
-        $page_content .= '<li>' . $upcoming_gigs . '</li>';
+        $new_gigs_string .= '<li>' . $upcoming_gigs . '</li>';
     }
-    $page_content .= '</ul>';
+    if(!empty($upcoming_gigs)){
+        $new_gigs_string = 'There are no upcoming gigs at the moment. Stay tuned!';
+    }
+
+    $page_content .= '<h3> Upcoming gigs </h3> <ul>' . $new_gigs_string . '</ul>';
 
     //show past gigs
     $query_previous = "SELECT date, venue, age_limit, FROM {node} WHERE date < '%d' ORDER BY CONVERT (datetime, date, 103) ASC ";
     $past_gigs =  db_query($query_previous, $today);
-
+    $old_gigs_string = '';
 
     //TODO change from list to table? [later]
-    $page_content .= '<h3>Past gigs</h3><ul>';
     while (db_fetch_object($query_previous)) {
-        $page_content .= '<li>' . $past_gigs . '</li>';
+        $old_gigs_string .= '<li>' . $past_gigs . '</li>';
     }
-    $page_content .= '</ul>';
-
-    if($page_content == ''){
-        $page_content = 'There are no upcoming gigs at the moment. Stay tuned!';
-    }
+    $page_content .= '<h3> Past gigs </h3> <ul>' . $old_gigs_string .'</ul>';
 
     mysql_close();
     return $page_content;
